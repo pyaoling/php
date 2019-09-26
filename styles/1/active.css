@@ -1,0 +1,13 @@
+.active{
+	width:auto;
+	height:200px;
+	border:2px solid #ccc;
+	font-size:12px;
+}
+.active h2{
+	text-align:center;
+}
+.active p{
+	text-align:center;
+	padding:4px;
+}
