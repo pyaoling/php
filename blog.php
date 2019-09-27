@@ -21,16 +21,23 @@ $_result=_query("SELECT tg_username,tg_sex,tg_face FROM tg_user ORDER BY tg_reg_
 	<?php 
 		// MYSQL_ASSSOC 数组下标强行为字符串
 		while(!!$_rows=_fetch_array_list($_result)){ 
+			$_html = array();
+			$_html['username'] = $_rows['tg_username'];
+			$_html['face'] = $_rows['tg_face'];
+			$_html['sex'] = $_rows['tg_sex'];
+			$_html = _html($_html);
 		?>
 	<dl>
-		<dd class='user'><?php echo $_rows['tg_username'];?>(<?php echo $_rows['tg_sex'];?>)</dd>
-		<dt><img src="<?php echo $_rows['tg_face'];?>" alt='111'></dt>
+		<dd class='user'><?php echo $_html['username'];?>(<?php echo $_html['sex'];?>)</dd>
+		<dt><img src="<?php echo $_html['face'];?>" alt='111'></dt>
 		<dd class="message">发消息</dd>
 		<dd class="friend">加为好友</dd>
 		<dd class="guest">写留言</dd>
 		<dd class="flower">送花</dd>
 	</dl>
 	<?php }
+	// 销毁结果集
+	_free_result($_result);
 	// 数字分页
 	_pageing(1);
 	// 文本分页

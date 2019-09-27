@@ -46,6 +46,23 @@ function _login_state(){
 	}
 }
 
+
+/*
+_html()函数表示对字符串进行HTML过滤显示
+如果是数组按数组的方式过滤，如果单独的字符串就按单独的字符串来过滤
+*/
+function _html($_string){
+	if(is_array($_string)){
+		foreach($_string as $_key => $_value){
+			$_string[$_key] = htmlspecialchars($_value);
+		}
+	}else{
+		$_string = htmlspecialchars($_string);
+	}
+	return $_string;
+}
+
+
 /*
 $_sql 获取所有的字段(总条数)
 $_size 1页里面有多少条

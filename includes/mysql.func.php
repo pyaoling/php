@@ -88,6 +88,12 @@ function _affected_rows(){
 	return mysql_affected_rows();
 }
 
+/*_free_result 销毁结果集*/
+function _free_result($_result){
+	mysql_free_result($_result);
+}
+
+
 function _close(){
 	if(!mysql_close()){
 		exit("数据库关闭异常");
