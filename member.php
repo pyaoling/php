@@ -6,7 +6,7 @@ define("IN_TG",true);
 define("SCRIPT","member");
 // 引入公共文件
 require dirname(__FILE__).'/includes/common.inc.php';
-
+// 是否正常登录
 
 ?>
 
@@ -17,23 +17,19 @@ require dirname(__FILE__).'/includes/common.inc.php';
 
 
 <div class="member"> 
-	<div class="member_sidebar"> 
-		<h2>中心导航</h2>
-		<dl>
-			<dt>帐号管理</dt>
-			<dd><a href="">个人信息</a></dd>
-			<dd><a href="">修改资料</a></dd>
-		</dl>		
-		<dl>
-			<dt>其它管理</dt>
-			<dd><a href="">短信查阅</a></dd>
-			<dd><a href="">好友设置</a></dd>
-			<dd><a href="">查询花朵</a></dd>
-			<dd><a href="">个人相册</a></dd>
-		</dl>		
-	</div>
+	<?php require ROOT_PATH."includes/member.inc.php";?>
 	<div class="member_main"> 
 		<h2>会员管理中心</h2>
+		<dl>
+			<dd>用户名：瓶子小</dd>
+			<dd>密码：123456</dd>
+			<dd>头像：face/01.gif</dd>
+			<dd>电子邮件：243579780@qq.com</dd>
+			<dd>主页：www.hao9669.com</dd>
+			<dd>QQ：243579780</dd>
+			<dd>注册时间：2019-09-22 10：10：10</dd>
+			<dd>身份：超级管理员</dd>
+		</dl>
 	</div>
 </div>
 
