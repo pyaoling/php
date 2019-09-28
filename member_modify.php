@@ -42,7 +42,7 @@ if($_GET['action']=='modify'){
             tg_username='{$_COOKIE['username']}'
         ");
     }
-    // 判断是否修改成功
+    // 判断是否修改成功(被响应的数据有1条)
     if(_affected_rows() == 1){
         _close();
         _session_destroy();
@@ -50,7 +50,8 @@ if($_GET['action']=='modify'){
     }else{
         _close();
         _session_destroy();
-        _location("非常遗叹，修改失败","member_modify.php");
+        //  没有数据被响应修改
+        _location("你什么都没有修改","member_modify.php");
     }
 }
 // 是否正常登录
