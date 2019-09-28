@@ -9,7 +9,49 @@ define("SCRIPT","member_modify");
 require dirname(__FILE__).'/includes/common.inc.php';
 // 修改资料
 if($_GET['action']=='modify'){
-
+    _check_code($_POST['code'],$_SESSION['code']);
+    include ROOT_PATH.'includes/register.func.php';
+    $_clean = array();
+    $_clean['password'] = _check_modify_password($_POST['password'],6);
+    $_clean['sex'] = _check_sex($_POST['sex']);
+    $_clean['face'] = _check_face($_POST['face']);
+    $_clean['email'] = _check_email($_POST['email'],6,40);
+    $_clean['qq'] = _check_qq($_POST['qq']);
+    $_clean['url'] = _check_url($_POST['url'],40);
+    print_r($_clean);
+    //修改资料
+    if(empty($_clean['password'])){
+        _query("UPDATE tg_user SET
+          tg_sex='{$_clean['sex']}',
+          tg_face='{$_clean['face']}',
+          tg_email='{$_clean['email']}',
+          tg_qq='{$_clean['qq']}',
+          tg_url='{$_clean['url']}'
+          WHERE
+            tg_username='{$_COOKIE['username']}'
+        ");
+    }else{
+        _query("UPDATE tg_user SET
+          tg_password='{$_clean['password']}',
+          tg_sex='{$_clean['sex']}',
+          tg_face='{$_clean['face']}',
+          tg_email='{$_clean['email']}',
+          tg_qq='{$_clean['qq']}',
+          tg_url='{$_clean['url']}'
+          WHERE
+            tg_username='{$_COOKIE['username']}'
+        ");
+    }
+    // 判断是否修改成功
+    if(_affected_rows() == 1){
+        _close();
+        _session_destroy();
+        _location("恭喜你修改成功",'member_modify.php');
+    }else{
+        _close();
+        _session_destroy();
+        _location("非常遗叹，修改失败","member_modify.php");
+    }
 }
 // 是否正常登录
 if(isset($_COOKIE['username'])){
@@ -63,9 +105,10 @@ if(isset($_COOKIE['username'])){
         <?php require ROOT_PATH."includes/member.inc.php";?>
         <div class="member_main">
             <h2>会员管理中心</h2>
-            <form action="member_modify.php?action=modify" method="post">
+            <form name="modify" action="member_modify.php?action=modify" method="post">
                 <dl>
                     <dd>用户名：<?php echo $_html['username'];?></dd>
+                    <dd>密码：<input type="password" class="text" name="password"></dd>
                     <dd>姓别：<?php echo $_html['sex_html'];?></dd>
                     <dd>头像：<?php echo $_html['face_html'];?></dd>
                     <dd>电子邮件：<input type="text" class='text' name="email" value="<?php echo $_html['email'];?>"></dd>
@@ -81,7 +124,5 @@ if(isset($_COOKIE['username'])){
             </form>
         </div>
     </div>
-
-
 
 <?php require ROOT_PATH."includes/footer.inc.php";?>
