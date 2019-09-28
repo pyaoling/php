@@ -46,6 +46,13 @@ function _login_state(){
 	}
 }
 
+/*判断唯一标识符异常*/
+function _uniqid($_mysql_uniqid,$_cookie_uniqid){
+	if($_mysql_uniqid != $_cookie_uniqid){
+		_alert_back("唯一标识符异常");
+	}
+}
+
 
 /*
 _html()函数表示对字符串进行HTML过滤显示
