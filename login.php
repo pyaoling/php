@@ -22,18 +22,20 @@ if(@$_GET['action'] == 'login'){
 	$_clean['password'] = _check_password($_POST['password'],6);
 	$_clean['time'] = _check_time($_POST['time']);
 	print_r($_clean);
-	// 到数据库去验证
+	// 到数据库去验证(登录成功)
 	if(!!$_rows = _fetch_array("SELECT tg_username,tg_uniqid FROM tg_user WHERE tg_username='{$_clean['username']}' and tg_password='{$_clean['password']}' and tg_active='' LIMIT 1")){
-		echo "登录成功";
-		echo $_rows['tg_username']."<br/>";
-		echo $_rows['tg_uniqid'];
+		// 登录成功后，记录登录信息  $_SERVER["REMOTE_ADDR"]是获取客户端的IP
+		_query("UPDATE tg_user SET
+			tg_last_time=NOW(),
+			tg_last_ip='{$_SERVER["REMOTE_ADDR"]}',
+			tg_login_count=tg_login_count+1 WHERE tg_username='{$_rows['tg_username']}'");
 		// 也需要关闭数据库
 		_close();
 		// 清空验证码的SESSION
 		_session_destroy();
 		// 设置cookie
 		_setcookies($_rows['tg_username'],$_rows['tg_uniqid'],$_clean['time']);
-		_location(null,"index.php");		
+		_location(null,"member.php");
 	}else{
 		// 关闭数据库
 		_close();
