@@ -14,7 +14,7 @@ if(@$_GET['action']=='modify'){
     if(!!$_rows = _fetch_array("SELECT tg_uniqid FROM tg_user WHERE tg_username='{$_COOKIE['username']}' LIMIT 1")){
     	// 为了防止COOKIE仂造，还要比对一下唯一标识符uniqid()
     	_uniqid($_rows['tg_uniqid'],$_COOKIE['uniqid']);
-    	include ROOT_PATH.'includes/register.func.php';
+    	include ROOT_PATH.'includes/check.func.php';
 	    $_clean = array();
 	    $_clean['password'] = _check_modify_password($_POST['password'],6);
 	    $_clean['sex'] = _check_sex($_POST['sex']);

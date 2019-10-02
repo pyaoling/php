@@ -26,6 +26,13 @@ function _alert_back($_info){
 	exit();
 }
 
+
+// 弹出之后关闭自己
+function _alert_close($_info){
+	echo "<script>alert('".$_info."');window.close();</script>";
+}
+
+
 /*
 
 */ 
@@ -53,6 +60,16 @@ function _uniqid($_mysql_uniqid,$_cookie_uniqid){
 	}
 }
 
+/*
+_title()标题截取函数
+*/
+function _title($_string){
+	if(mb_strlen($_string,'utf-8') > 14){
+		$_string = mb_substr($_string,1,14,'utf-8').'……';
+	}
+	return $_string;
+}
+
 
 /*
 _html()函数表示对字符串进行HTML过滤显示
@@ -69,6 +86,29 @@ function _html($_string){
 	return $_string;
 }
 
+
+
+/*
+_mysql_string
+@param string $_string
+@return string $_string
+*/
+function _mysql_string($_string){
+	// get_magic_quotes_gpc，on off默认是开启的，如果想关掉，必须在php。ini关闭它
+	// get_magic_quotes_gpc() 如果开启状态，那么就不需要转义
+	// 如果没有开启，就转义
+	if(!GPC){
+			//return mysql_real_escape_string($_string);	
+		if(is_array($_string)){
+			foreach($_string as $_key=>$_value){
+				$_string[$_key]=_mysql_string($_value);
+			}
+		}else{
+			$_string = mysql_real_escape_string($_string);
+		}		
+		return $_string;
+	}
+}
 
 /*
 $_sql 获取所有的字段(总条数)
@@ -125,9 +165,9 @@ function _pageing($_type){
 		echo '<ul>';
 		for($i=0;$i<$_pageabsolute;$i++){
 			if($_page == ($i+1)){
-				echo "<li><a href='blog.php?page=".($i+1)."' class='selected'>".($i+1)."</a></li>";
+				echo "<li><a href='".SCRIPT.".php?page=".($i+1)."' class='selected'>".($i+1)."</a></li>";
 			}else{
-				echo "<li><a href='blog.php?page=".($i+1)."'>".($i+1)."</a></li>";
+				echo "<li><a href='".SCRIPT.".php?page=".($i+1)."'>".($i+1)."</a></li>";
 			}
 			
 		}
@@ -180,20 +220,7 @@ function _sha1_uniqid(){
 	return _mysql_string(sha1(uniqid(rand(),true)));
 }
 
-/*
-_mysql_string
-@param string $_string
-@return string $_string
-*/
-function _mysql_string($_string){
-	// get_magic_quotes_gpc，on off默认是开启的，如果想关掉，必须在php。ini关闭它
-	// get_magic_quotes_gpc() 如果开启状态，那么就不需要转义
-	// 如果没有开启，就转义
-	if(!GPC){
-		return mysql_real_escape_string($_string);
-	}
-	return $_string;
-}
+
 
 /*
 _check_code

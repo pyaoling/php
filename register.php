@@ -15,7 +15,7 @@ _login_state();
 if(@$_GET['action']=='register'){
 	// 为了防止恶意注册，跨站攻击
 	_check_code($_POST['code'],$_SESSION['code']);	
-	include ROOT_PATH.'includes/register.func.php';
+	include ROOT_PATH.'includes/check.func.php';
 	// 接收用户username,$_POST[username]是污染数据，就是外部不可信的数据，就是没有过滤的数据
 	// 创建一个空数组，用来存储提交过来的合法数据
 	// 引入验证文件
