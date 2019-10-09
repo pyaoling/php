@@ -13,7 +13,7 @@
 		<?php
 		if(isset($_COOKIE['username'])){
 			echo "\n";
-			echo '<li><a href="member.php">'.$_COOKIE['username'].'.个人中心</a></li>';
+			echo '<li><a href="member.php">'.$_COOKIE['username'].'.个人中心</a>'.$_message_html.'</li>';
 		}else{
 			echo '<li><a href="register.php">注册</a></li>';
 			echo "\n";

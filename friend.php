@@ -3,52 +3,76 @@ session_start();
 // 禁止非法调用
 define("IN_TG",true);
 // 在本页有效的CSS
-define("SCRIPT","message");
+define("SCRIPT","friend");
 // 引入公共文件
 require dirname(__FILE__).'/includes/common.inc.php';
 // 判断是否登录
 if(!isset($_COOKIE['username'])){
 	_alert_close("请先登录");
 }
-// 写短信
-if($_GET['action'] == 'write'){
+
+// 添加好友
+if(@$_GET['action']=='add'){
 	_check_code($_POST['code'],$_SESSION['code']);
-	// 从tg_user表中找tg_uniqid唯一标识符
-	if(!!$_rows = _fetch_array("SELECT tg_uniqid FROM tg_user WHERE tg_username='{$_COOKIE['username']}' LIMIT 1")){
+	$_rows=_fetch_array("SELECT 
+		tg_uniqid
+		FROM
+		tg_user 
+		WHERE
+		tg_username='{$_COOKIE['username']}' 
+		LIMIT 1");
+	if(!!$_rows){
 		_uniqid($_rows['tg_uniqid'],$_COOKIE['uniqid']);
-		include ROOT_PATH.'includes/check.func.php';
-		$_clean = array();
-		$_clean['touser'] = $_POST['touser'];
-		$_clean['fromuser'] = $_COOKIE['username'];
-		$_clean['content'] = _check_content($_POST['content']);
-		$_clean = _mysql_string($_clean);
-		print_r($_clean);
-		// 写入表中
-		_query("INSERT INTO tg_message(
-					tg_touser,
-					tg_fromuser,
-					tg_content,
-					tg_date
-				) VALUES(
-					'{$_clean['touser']}',
-					'{$_clean['fromuser']}',
-					'{$_clean['content']}',
-					NOW()
-				)");
-		// 新增成功
+	}
+	include ROOT_PATH.'includes/check.func.php';
+	$_clean = array();
+	$_clean['touser'] = $_POST['touser'];
+	$_clean['fromuser'] = $_COOKIE['username'];
+	$_clean['content'] = _check_content($_POST['content']);
+	$_clean= _mysql_string($_clean);
+	// 不能添加自己
+	if($_clean['touser']==$_clean['fromuser']){
+		_alert_close("不能添加自己为好友哦");
+	}
+	// 数据库验证好友是否已经添加
+	$_ros = _fetch_array("SELECT 
+		tg_id 
+		FROM 
+		tg_friend
+		WHERE 
+		(tg_touser='{$_clean['touser']}' AND tg_fromuser='{$_clean['fromuser']}')
+		OR 
+		(tg_touser='{$_clean['fromuser']}' AND tg_fromuser='{$_clean['touser']}')
+		LIMIT 1");
+	if(!!$_ros){
+		_alert_back("你们已经是好友了，或得是未验证的好友，无需添加");
+	}else{
+		// 添加好友信息	
+		_query("INSERT INTO tg_friend(
+			tg_touser,
+			tg_fromuser,
+			tg_content,
+			tg_date
+		) VALUES(
+			'{$_clean['touser']}',
+			'{$_clean['fromuser']}',
+			'{$_clean['content']}',
+			NOW()
+		)");
+		// 是否真的添加好了
 		if(_affected_rows()==1){
 			_close();
 			_session_destroy();
-			_alert_close("短信发送成功");
+			_alert_close("添加好友成功");
 		}else{
 			_close();
 			_session_destroy();
-			_alert_back("短信发送失败");
+			_alert_back("添加好友失败");
 		}
-	}else{
-		_alert_close("唯一标识符异常，非法登录");
 	}
+	
 }
+
 // 获取数据
 if(isset($_GET['id'])){
 	// 因为是数据所以加花括号'{$_GET['id']}'
@@ -74,12 +98,12 @@ if(isset($_GET['id'])){
 
 <div class="message"> 
 	<h3>写短信</h3>
-	<form method="post" action="message.php?action=write">
+	<form method="post" action="friend.php?action=add">
 		<input type="hidden" name="touser" value="<?php echo $_html['touser'];?>"/>
 		<dl>
 			<dd>
 				<input type="text" readonly="readonly" value="<?php echo $_html['touser'];?>" class="text"/></dd>
-			<dd><textarea name="content"></textarea></dd>
+			<dd><textarea name="content">我非常想和你交朋友。</textarea></dd>
 			<dd>
 				<label>验证码:</label>
 				<input type="text" name="code" class="text yzm"/>

@@ -1,9 +1,16 @@
 window.onload = function(){
 
     var message = document.getElementsByName("message");
+
     for(var i = 0;i < message.length;i++){
         message[i].onclick = function(){
             centerWindow('message.php?id='+this.title,'message',250,400);
+        }
+    }
+    var friend = document.getElementsByName("friend");
+    for(var i = 0;i < friend.length;i++){
+        friend[i].onclick = function(){
+            centerWindow("friend.php?id="+this.title,'friend',250,400);
         }
     }
 };

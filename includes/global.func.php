@@ -178,7 +178,7 @@ function _pageing($_type){
 		echo '<div class="page_text">';
 		echo '<ul>';
 		echo '<li>'.$_page.'/'.$_pageabsolute.'页|</li>';
-		echo '<li>共有<strong>'.$_num.'</strong>个会员</li>';
+		echo '<li>共有<strong>'.$_num.'</strong>条数据</li>';
 			//首页
 			if($_page == 1){
 				echo "<li>首页</li>";
@@ -203,7 +203,10 @@ function _pageing($_type){
 
 // 清空SESSION
 function _session_destroy(){
-	session_destroy();
+	// 如果开启了才销毁
+	if(session_start()){
+		session_destroy();
+	}	
 }
 
 // 清空cookie
