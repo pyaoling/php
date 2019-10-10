@@ -36,8 +36,21 @@ _select_db();
 //  设置字符集
 _set_names();
 
-
-
+// 短信提醒  取得字段的总和
+$_message = _fetch_array("SELECT 
+					count(tg_id)
+				AS 
+					count 
+				FROM 
+					tg_message 
+				WHERE 
+					tg_state = 0
+				");
+if(empty($_message['count'])){
+	$_message_html='<strong><a href="member_message.php">'.(0).'</a></strong>';
+}else{
+	$_message_html = '<strong><a href="member_message.php">'.($_message['count']).'</a></strong>';
+}
 
 
 ?>
