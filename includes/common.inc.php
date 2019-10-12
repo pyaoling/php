@@ -45,6 +45,8 @@ $_message = _fetch_array("SELECT
 					tg_message 
 				WHERE 
 					tg_state = 0
+				AND 			
+					tg_touser='{$_COOKIE['username']}'		
 				");
 if(empty($_message['count'])){
 	$_message_html='<strong><a href="member_message.php">'.(0).'</a></strong>';

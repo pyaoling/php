@@ -44,14 +44,19 @@ if(@$_GET['action']=='delete' && isset($_POST['ids'])){
 // 分页模块
 global $_pagesize,$_pagenum;
 // 一页多少条
-_page("SELECT tg_id FROM tg_message",10);
+_page("SELECT tg_id FROM tg_message WHERE tg_touser='{$_COOKIE['username']}'",10);
 $_result=_query("SELECT 
 	tg_id,
 	tg_state,
 	tg_fromuser,
 	tg_content,
 	tg_date 
-	FROM tg_message ORDER BY tg_date DESC LIMIT $_pagenum,$_pagesize");
+	FROM tg_message 
+	WHERE tg_touser='{$_COOKIE['username']}'
+	ORDER BY 
+	tg_date DESC 
+	LIMIT 
+	$_pagenum,$_pagesize");
 
 ?>
 <script type="text/javascript" src="js/member_message.js"></script>
